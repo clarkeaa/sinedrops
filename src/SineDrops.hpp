@@ -10,7 +10,9 @@ public:
 
     virtual ~SineDrops();
 
-    int fillBuffer(float* buffer, unsigned long frameCount);
+    int fillBuffer(float* buffer, 
+		   unsigned long frameCount, 
+		   double currentTime);
 
 private:
     SineDrops(int channelCount, 

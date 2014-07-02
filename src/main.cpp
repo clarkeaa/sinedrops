@@ -22,7 +22,9 @@ static int callback(const void *input,
 {
     float* buffer = static_cast<float*>(output);
     SineDrops* sineDrops = static_cast<SineDrops*>(userData);
-    return sineDrops->fillBuffer(buffer, frameCount);
+    return sineDrops->fillBuffer(buffer, 
+				 frameCount, 
+				 timeInfo->currentTime);
 }
 
 int main(int argc, const char* argv[])
