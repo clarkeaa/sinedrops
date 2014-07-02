@@ -4,6 +4,8 @@
 #include <cstdio>
 #include <assert.h>
 #include <stdint.h>
+#include "SineDrops.hpp"
+
 typedef float  float32_t;
 typedef double float64_t;
 
@@ -18,8 +20,9 @@ static int callback(const void *input,
 		    PaStreamCallbackFlags statusFlags, 
 		    void *userData)
 {
-    memset(output, 0, s_sampleSize * s_channelCount * frameCount);
-    return 0;
+    float* buffer = static_cast<float*>(output);
+    SineDrops* sineDrops = static_cast<SineDrops*>(userData);
+    return sineDrops->fillBuffer(buffer, frameCount);
 }
 
 int main(int argc, const char* argv[])
@@ -38,6 +41,9 @@ int main(int argc, const char* argv[])
     unsigned long framesPerBuffer = 512;
     PaStreamFlags streamFlags = 0;   
     
+    std::shared_ptr<SineDrops> 
+	sineDrops(SineDrops::create(s_channelCount, sampleRate));
+
     PaError err = 
 	Pa_OpenStream( &stream,
 		       NULL,
@@ -46,7 +52,7 @@ int main(int argc, const char* argv[])
 		       framesPerBuffer,
 		       streamFlags,
 		       callback,
-		       NULL) ;
+		       sineDrops.get()) ;
     assert(err == paNoError);
 
     Pa_StartStream(stream);
