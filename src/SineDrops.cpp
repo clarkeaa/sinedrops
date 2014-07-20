@@ -2,6 +2,8 @@
 #include <string.h>
 #include "Sequencer.hpp"
 #include "Instrument.hpp"
+#include "VoiceFactory.hpp"
+#include "SineVoice.hpp"
 
 struct SineDrops::SineDropsImpl {
     int channelCount;
@@ -21,11 +23,20 @@ SineDrops* SineDrops::create(int channelCount,
     return new SineDrops(channelCount, sampleRate);
 }
 
+namespace {
+    class SineFactory : public VoiceFactory {
+        Voice* makeVoice() {
+            return new SineVoice();
+        }
+    };
+}
+
 SineDrops::SineDrops(int channelCount, 
-		     double sampleRate)
+                     double sampleRate)
     : _impl(new SineDropsImpl(channelCount, sampleRate))
 {
-    _impl->instrument = Instrument::create();
+    SineFactory vfactory;
+    _impl->instrument = Instrument::create(4, &vfactory);
     _impl->sequencer = Sequencer::create();
 }
 
@@ -41,10 +52,6 @@ int SineDrops::fillBuffer(float* buffer,
 			  double currentTime)
 {
     _impl->sequencer->update("sine", _impl->instrument, currentTime);    
-
-    memset(buffer, 
-	   0, 
-	   sizeof(float) * _impl->channelCount * frameCount);
-
+    _impl->instrument->fillBuffer(buffer, frameCount, currentTime);
     return 0;
 }
