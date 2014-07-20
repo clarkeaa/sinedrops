@@ -36,7 +36,8 @@ SineDrops::SineDrops(int channelCount,
     : _impl(new SineDropsImpl(channelCount, sampleRate))
 {
     SineFactory vfactory;
-    _impl->instrument = Instrument::create(4, &vfactory);
+    int polyphony = 2;
+    _impl->instrument = Instrument::create(polyphony, &vfactory);
     _impl->sequencer = Sequencer::create();
 }
 
@@ -48,10 +49,10 @@ SineDrops::~SineDrops()
 }
 
 int SineDrops::fillBuffer(float* buffer, 
-			  unsigned long frameCount, 
-			  double currentTime)
+                          unsigned long frameCount, 
+                          double currentTime)
 {
     _impl->sequencer->update("sine", _impl->instrument, currentTime);    
-    _impl->instrument->fillBuffer(buffer, frameCount, currentTime);
+    _impl->instrument->fillBuffer(buffer, frameCount, currentTime);    
     return 0;
 }

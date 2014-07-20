@@ -32,12 +32,12 @@ void Sequencer::update(const std::string& name,
                        Instrument* instrument,
                        double currentTime)
 {
-    uint64_t div = currentTime / 0.5;
+    uint64_t div = currentTime / 0.25;
     if (div > _impl->count) {
         _impl->count = div;
 
         Voice* voice = instrument->nextVoice();
-        int key = rand() % 5 * 12;
+        int key = rand() % 7 * 12;
         voice->gateOn(key, 60);
         std::cout << "gateOn " << this << " " << key << std::endl;
     }

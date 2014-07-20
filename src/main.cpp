@@ -14,17 +14,18 @@ static const PaSampleFormat s_sampleFormat = paFloat32;
 static const size_t s_sampleSize = sizeof(float32_t);
 
 static int callback(const void *input, 
-		    void *output, 
-		    unsigned long frameCount, 
-		    const PaStreamCallbackTimeInfo *timeInfo, 
-		    PaStreamCallbackFlags statusFlags, 
-		    void *userData)
+                    void *output, 
+                    unsigned long frameCount, 
+                    const PaStreamCallbackTimeInfo *timeInfo, 
+                    PaStreamCallbackFlags statusFlags, 
+                    void *userData)
 {
     float* buffer = static_cast<float*>(output);
     SineDrops* sineDrops = static_cast<SineDrops*>(userData);
-    return sineDrops->fillBuffer(buffer, 
-				 frameCount, 
-				 timeInfo->currentTime);
+    int answer = sineDrops->fillBuffer(buffer, 
+                                       frameCount, 
+                                       timeInfo->currentTime);
+    return answer;
 }
 
 int main(int argc, const char* argv[])
