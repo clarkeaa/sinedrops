@@ -26,7 +26,7 @@ SineDrops* SineDrops::create(int channelCount,
 namespace {
     class SineFactory : public VoiceFactory {
         Voice* makeVoice() {
-            return new SineVoice();
+            return SineVoice::create();
         }
     };
 }
