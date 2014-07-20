@@ -40,7 +40,10 @@ Instrument::~Instrument()
 
 Voice* Instrument::nextVoice()
 {
-    return NULL;
+    Voice* answer = _impl->voices[_impl->currentIndex];
+    _impl->currentIndex = 
+        (_impl->currentIndex + 1) % _impl->voices.size();
+    return answer;
 }
 
 static void mix(float* dst, float* src, unsigned long frameCount)

@@ -67,8 +67,9 @@ int SineVoice::fillBuffer(float* buffer,
         for(int i=0; i<frameCount; ++i) {
             uint64_t count = i + countStart;
             float val = amp * sin(sinCo * count);
-            *(++buffer) = val;
-            *(++buffer) = val;
+            for(int chan=0; chan<s_numChannels; ++chan) {
+                *(++buffer) = val;
+            }
         }
     }
     return 0;

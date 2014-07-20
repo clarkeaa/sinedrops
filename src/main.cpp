@@ -33,28 +33,28 @@ int main(int argc, const char* argv[])
     PaStream* stream;
     PaDeviceIndex outputDevice = Pa_GetDefaultOutputDevice();
     PaStreamParameters outputParameters = {
-	.device = outputDevice,
-	.channelCount = s_channelCount,
-	.sampleFormat = s_sampleFormat,
-	.suggestedLatency = 0.1,
-	.hostApiSpecificStreamInfo = NULL,
+        .device = outputDevice,
+        .channelCount = s_channelCount,
+        .sampleFormat = s_sampleFormat,
+        .suggestedLatency = 0.1,
+        .hostApiSpecificStreamInfo = NULL,
     };
     double sampleRate = 44100;
     unsigned long framesPerBuffer = 512;
     PaStreamFlags streamFlags = 0;   
     
     std::shared_ptr<SineDrops> 
-	sineDrops(SineDrops::create(s_channelCount, sampleRate));
+        sineDrops(SineDrops::create(s_channelCount, sampleRate));
 
     PaError err = 
-	Pa_OpenStream( &stream,
-		       NULL,
-		       &outputParameters,
-		       sampleRate,
-		       framesPerBuffer,
-		       streamFlags,
-		       callback,
-		       sineDrops.get()) ;
+        Pa_OpenStream( &stream,
+                       NULL,
+                       &outputParameters,
+                       sampleRate,
+                       framesPerBuffer,
+                       streamFlags,
+                       callback,
+                       sineDrops.get()) ;
     assert(err == paNoError);
 
     Pa_StartStream(stream);
