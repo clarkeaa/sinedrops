@@ -38,8 +38,7 @@ void Sequencer::update(const std::string& name,
         _impl->count = div;
 
         Voice* voice = instrument->nextVoice();
-        int key = rand() % 7 * 12;
+        int key = ((rand() % 20) + 10) * 3;
         voice->gateOn(key, 60);
-        std::cout << "gateOn " << this << " " << key << std::endl;
     }
 }
