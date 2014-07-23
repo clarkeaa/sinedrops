@@ -58,7 +58,7 @@ int main(int argc, const char* argv[])
         .suggestedLatency = 0.1,
         .hostApiSpecificStreamInfo = NULL,
     };
-    unsigned long framesPerBuffer = 512;
+    unsigned long framesPerBuffer = paFramesPerBufferUnspecified;
     PaStreamFlags streamFlags = 0;   
     
     std::shared_ptr<SineDrops> 
