@@ -50,7 +50,7 @@ inline static double calcAmp(int velocity)
 
 inline static double calcFreq(int velocity)
 {
-    return powf(2.0f, velocity + 48 / 12.0f);
+    return pow(2.0, (velocity + 48) / 12.0);
 }
 
 int SineVoice::fillBuffer(float* buffer,
