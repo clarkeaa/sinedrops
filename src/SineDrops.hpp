@@ -1,5 +1,7 @@
 #pragma once
 
+class MTime;
+
 class SineDrops
 {
 public:
@@ -12,7 +14,7 @@ public:
 
     int fillBuffer(float* buffer, 
                    unsigned long frameCount, 
-                   double currentTime);
+                   const MTime& currentTime);
     
 private:
     SineDrops(int channelCount, 

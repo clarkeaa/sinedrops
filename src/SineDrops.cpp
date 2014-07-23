@@ -50,7 +50,7 @@ SineDrops::~SineDrops()
 
 int SineDrops::fillBuffer(float* buffer, 
                           unsigned long frameCount, 
-                          double currentTime)
+                          const MTime& currentTime)
 {
     _impl->sequencer->update("sine", _impl->instrument, currentTime);    
     _impl->instrument->fillBuffer(buffer, frameCount, currentTime);    

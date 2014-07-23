@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Voice.hpp"
+#include "MTime.hpp"
 
 class SineVoice : public Voice
 {
@@ -17,7 +18,7 @@ public:
     
     virtual int fillBuffer(float* buffer, 
                            unsigned long frameCount, 
-                           double currentTime);
+                           const MTime& currentTime);
 private:
     SineVoice();
     struct SineVoiceImpl* _impl;

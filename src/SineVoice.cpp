@@ -55,14 +55,14 @@ inline static double calcFreq(int velocity)
 
 int SineVoice::fillBuffer(float* buffer,
                           unsigned long frameCount, 
-                          double currentTime)
+                          const MTime& currentTime)
 {
     if (_impl->key < 0 || _impl->velocity <= 0) {
         memset(buffer, 0, frameCount*s_numChannels*sizeof(float));        
     } else {
         double freq = calcFreq(_impl->key);
         double amp = calcAmp(_impl->velocity);
-        uint64_t countStart = currentTime * s_sampleRate;
+        uint64_t countStart = currentTime.value;
         double sinCo = freq * 2.0 * M_PI / s_sampleRate;
         for(int i=0; i<frameCount; ++i) {
             uint64_t count = i + countStart;

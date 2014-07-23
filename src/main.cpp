@@ -5,6 +5,7 @@
 #include <assert.h>
 #include <stdint.h>
 #include "SineDrops.hpp"
+#include "MTime.hpp"
 
 typedef float  float32_t;
 typedef double float64_t;
@@ -12,6 +13,14 @@ typedef double float64_t;
 static const int s_channelCount = 2;
 static const PaSampleFormat s_sampleFormat = paFloat32;
 static const size_t s_sampleSize = sizeof(float32_t);
+static const double s_sampleRate = 44100;
+
+namespace {
+    struct CallbackState {
+        uint64_t time;
+        SineDrops* sineDrops;
+    };
+}
 
 static int callback(const void *input, 
                     void *output, 
@@ -21,10 +30,19 @@ static int callback(const void *input,
                     void *userData)
 {
     float* buffer = static_cast<float*>(output);
-    SineDrops* sineDrops = static_cast<SineDrops*>(userData);
+    CallbackState* callbackState = 
+        static_cast<CallbackState*>(userData);
+    MTime time = {
+        .value = callbackState->time,
+        .timescale = static_cast<uint32_t>(s_sampleRate)
+    };
+    SineDrops* sineDrops = callbackState->sineDrops;
     int answer = sineDrops->fillBuffer(buffer, 
                                        frameCount, 
-                                       timeInfo->currentTime);
+                                       time);
+
+    callbackState->time += frameCount;
+
     return answer;
 }
 
@@ -40,22 +58,26 @@ int main(int argc, const char* argv[])
         .suggestedLatency = 0.1,
         .hostApiSpecificStreamInfo = NULL,
     };
-    double sampleRate = 44100;
     unsigned long framesPerBuffer = 512;
     PaStreamFlags streamFlags = 0;   
     
     std::shared_ptr<SineDrops> 
-        sineDrops(SineDrops::create(s_channelCount, sampleRate));
+        sineDrops(SineDrops::create(s_channelCount, s_sampleRate));
+
+    CallbackState callbackState = {
+        .time = 0,
+        .sineDrops = sineDrops.get(),
+    };
 
     PaError err = 
         Pa_OpenStream( &stream,
                        NULL,
                        &outputParameters,
-                       sampleRate,
+                       s_sampleRate,
                        framesPerBuffer,
                        streamFlags,
                        callback,
-                       sineDrops.get()) ;
+                       &callbackState) ;
     assert(err == paNoError);
 
     Pa_StartStream(stream);

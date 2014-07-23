@@ -65,7 +65,7 @@ static void mix(float* dst, float* src, unsigned long frameCount)
 
 int Instrument::fillBuffer(float* buffer, 
                            unsigned long frameCount, 
-                           double currentTime)
+                           const MTime& currentTime)
 {
     memset(buffer, 0, frameCount*s_numChannels*sizeof(float));
     float tempBuffer[frameCount*s_numChannels];

@@ -3,6 +3,7 @@
 #include <string>
 
 class Instrument;
+class MTime;
 
 class Sequencer
 {
@@ -15,7 +16,7 @@ public:
     
     void update(const std::string& name, 
                 Instrument* instrument,
-                double currentTime);
+                const MTime& currentTime);
 
 private:
     Sequencer();

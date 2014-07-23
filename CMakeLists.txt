@@ -6,6 +6,7 @@ find_library(PORTAUDIO portaudio)
 
 add_executable(sinedrops 
     src/main.cpp 
+    src/MTime.cpp
     src/SineDrops.cpp
     src/SineVoice.cpp
     src/Sequencer.cpp

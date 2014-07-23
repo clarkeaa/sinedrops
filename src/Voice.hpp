@@ -1,5 +1,7 @@
 #pragma once
 
+class MTime;
+
 class Voice
 {
 public:
@@ -11,5 +13,5 @@ public:
     
     virtual int fillBuffer(float* buffer, 
                            unsigned long frameCount, 
-                           double currentTime) = 0;
+                           const MTime& currentTime) = 0;
 };

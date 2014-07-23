@@ -4,6 +4,7 @@
 #include "Instrument.hpp"
 #include <cstdlib>
 #include <iostream>
+#include "MTime.hpp"
 
 struct Sequencer::SequencerImpl {
     uint64_t count;
@@ -30,9 +31,9 @@ Sequencer::~Sequencer()
 
 void Sequencer::update(const std::string& name, 
                        Instrument* instrument,
-                       double currentTime)
+                       const MTime& currentTime)
 {
-    uint64_t div = currentTime / 0.25;
+    uint64_t div = currentTime.seconds() / 0.25;
     if (div > _impl->count) {
         _impl->count = div;
 
