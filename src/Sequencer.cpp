@@ -8,9 +8,11 @@
 
 struct Sequencer::SequencerImpl {
     uint64_t count;
+    Voice* lastGateOnVoice;
 
     SequencerImpl()
-        : count(0)
+        : count(0), 
+          lastGateOnVoice(NULL)
         {}
 };
 
@@ -33,12 +35,22 @@ void Sequencer::update(const std::string& name,
                        Instrument* instrument,
                        const MTime& currentTime)
 {
-    uint64_t div = currentTime.seconds() / 0.25;
+    uint64_t div = currentTime.seconds() / 0.5;
     if (div > _impl->count) {
         _impl->count = div;
 
         Voice* voice = instrument->nextVoice();
-        int key = ((rand() % 20) + 10) * 3;
-        voice->gateOn(key, 60);
+
+        if (voice == _impl->lastGateOnVoice) {
+            voice->gateOff(currentTime);
+            _impl->lastGateOnVoice = NULL;
+        } else {
+            int key = ((rand() % 20) + 10) * 3;
+            voice->gateOn(currentTime, key, 60);
+            if (_impl->lastGateOnVoice) {
+                _impl->lastGateOnVoice->gateOff(currentTime);
+            }
+            _impl->lastGateOnVoice = voice;
+        }
     }
 }

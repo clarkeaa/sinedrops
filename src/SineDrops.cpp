@@ -53,6 +53,6 @@ int SineDrops::fillBuffer(float* buffer,
                           const MTime& currentTime)
 {
     _impl->sequencer->update("sine", _impl->instrument, currentTime);    
-    _impl->instrument->fillBuffer(buffer, frameCount, currentTime);    
+    _impl->instrument->fillBuffer(buffer, frameCount, currentTime);
     return 0;
 }

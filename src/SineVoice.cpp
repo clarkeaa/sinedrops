@@ -3,18 +3,40 @@
 #include <cstring>
 #include <cmath>
 #include <stdint.h>
+#include "AREnvelope.hpp"
 
 static const int s_numChannels = 2;
 static const double s_sampleRate = 44100.0;
 
+namespace {
+    struct GateInfo {
+        MTime time;
+        bool isSet;
+        GateInfo() : time(), isSet(false) {}
+        GateInfo(const MTime& argTime) 
+            : time(argTime), isSet(true) {}
+    };
+}
+
 struct SineVoice::SineVoiceImpl {
     int key;
     int velocity;
+    AREnvelope* envelope;
+    GateInfo gateOnTime;
+    GateInfo gateOffTime;
 
     SineVoiceImpl() 
         : key(-1),
-          velocity(0)
-        {}
+          velocity(0),
+          envelope(new AREnvelope())
+        {
+            envelope->setAttack(0.2)
+                .setRelease(1.0);
+        }
+
+    ~SineVoiceImpl() {
+        delete this->envelope;
+    }
 };
 
 SineVoice* SineVoice::create()
@@ -32,15 +54,17 @@ SineVoice::~SineVoice() {
     delete _impl;
 }
 
-void SineVoice::gateOn(int key, int velocity)
+void SineVoice::gateOn(const MTime& time, int key, int velocity)
 {
     _impl->key = key;
     _impl->velocity = velocity;
+    _impl->gateOnTime = GateInfo(time);
+    _impl->gateOffTime = GateInfo();
 }
 
-void SineVoice::gateOff()
+void SineVoice::gateOff(const MTime& time)
 {
-    _impl->key = -1;
+    _impl->gateOffTime = GateInfo(time);
 }
 
 inline static double calcAmp(int velocity)
@@ -48,29 +72,51 @@ inline static double calcAmp(int velocity)
     return velocity / 127.0f;
 }
 
-inline static double calcFreq(int velocity)
+inline static double calcFreq(int key)
 {
-    return pow(2.0, (velocity + 48) / 12.0);
+    return pow(2.0, (key + 48) / 12.0);
+}
+
+static double calcAmpEnv(const AREnvelope* env,
+                         const GateInfo& gateOnTime,
+                         const GateInfo& gateOffTime,
+                         const MTime& currentTime)
+{
+    if (gateOnTime.isSet) {
+        if (gateOffTime.isSet) {
+            return env->calc(gateOnTime.time,
+                             gateOffTime.time,
+                             currentTime);
+        } else {
+            return env->calc(gateOnTime.time,
+                             currentTime);
+        }
+    } else {
+        return 0.0;
+    }
 }
 
 int SineVoice::fillBuffer(float* buffer,
                           unsigned long frameCount, 
                           const MTime& currentTime)
 {
-    if (_impl->key < 0 || _impl->velocity <= 0) {
-        memset(buffer, 0, frameCount*s_numChannels*sizeof(float));        
-    } else {
-        double freq = calcFreq(_impl->key);
-        double amp = calcAmp(_impl->velocity);
-        uint64_t countStart = currentTime.value;
-        double sinCo = freq * 2.0 * M_PI / s_sampleRate;
-        for(int i=0; i<frameCount; ++i) {
-            uint64_t count = i + countStart;
-            float val = amp * sin(sinCo * count);
-            for(int chan=0; chan<s_numChannels; ++chan) {
-                *(++buffer) = val;
-            }
+    double freq = calcFreq(_impl->key);
+    double amp = calcAmp(_impl->velocity);
+    uint64_t countStart = currentTime.value;
+    double sinCo = freq * 2.0 * M_PI / s_sampleRate;
+    MTime envTime = currentTime;
+    for(int i=0; i<frameCount; ++i) {
+        envTime.value = currentTime.value + i;
+        double envAmp = calcAmpEnv(_impl->envelope,
+                                   _impl->gateOnTime,
+                                   _impl->gateOffTime,
+                                   envTime);
+        uint64_t count = i + countStart;
+        float val = amp * envAmp * sin(sinCo * count);
+        for(int chan=0; chan<s_numChannels; ++chan) {
+            *(++buffer) = val;
         }
     }
+
     return 0;
 }

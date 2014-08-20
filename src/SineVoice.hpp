@@ -12,9 +12,11 @@ public:
 
     virtual ~SineVoice();
 
-    virtual void gateOn(int key, int velocity);
+    virtual void gateOn(const MTime& time, 
+                        int key, 
+                        int velocity);
 
-    virtual void gateOff();
+    virtual void gateOff(const MTime& time);
     
     virtual int fillBuffer(float* buffer, 
                            unsigned long frameCount, 

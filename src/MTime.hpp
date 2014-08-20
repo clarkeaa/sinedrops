@@ -7,4 +7,6 @@ struct MTime {
     uint32_t timescale;
 
     double seconds() const;
+
+    MTime operator-(const MTime& operand) const;
 };
