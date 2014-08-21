@@ -114,7 +114,7 @@ int SineVoice::fillBuffer(float* buffer,
         uint64_t count = i + countStart;
         float val = amp * envAmp * sin(sinCo * count);
         for(int chan=0; chan<s_numChannels; ++chan) {
-            *(++buffer) = val;
+            *buffer++ = val;
         }
     }
 
