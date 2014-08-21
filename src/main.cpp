@@ -6,6 +6,7 @@
 #include <stdint.h>
 #include "SineDrops.hpp"
 #include "MTime.hpp"
+#include <memory>
 
 typedef float  float32_t;
 typedef double float64_t;
