@@ -23,7 +23,8 @@ double AREnvelope::calc(const MTime& gateOnTime,
 {
     MTime mtimeSince = currentTime - gateOffTime;
     double timeSince = mtimeSince.seconds();
-    return std::max(1.0 + (-1.0/_release) * timeSince, 0.0);
+    double releaseStart = calc(gateOnTime, gateOffTime);
+    return std::max(releaseStart + (-1.0/_release) * timeSince, 0.0);
 }
 
 AREnvelope& AREnvelope::setAttack(double attack)
