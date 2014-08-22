@@ -11,6 +11,7 @@ add_executable(sinedrops
     src/Sequencer.cpp
     src/SineDrops.cpp
     src/SineVoice.cpp
+    src/RandSequencer.cpp
     src/main.cpp 
     ) 
 target_link_libraries(sinedrops ${PORTAUDIO})

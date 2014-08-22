@@ -8,18 +8,11 @@ class MTime;
 class Sequencer
 {
 public:
-    struct SequencerImpl;
-
     static Sequencer* create();
 
-    virtual ~Sequencer();
+    virtual ~Sequencer() {}
     
-    void update(const std::string& name, 
-                Instrument* instrument,
-                const MTime& currentTime);
-
-private:
-    Sequencer();
-
-    SequencerImpl* _impl;
+    virtual void update(const std::string& name, 
+                        Instrument* instrument,
+                        const MTime& currentTime) =0;
 };

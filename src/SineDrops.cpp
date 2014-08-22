@@ -36,7 +36,7 @@ SineDrops::SineDrops(int channelCount,
     : _impl(new SineDropsImpl(channelCount, sampleRate))
 {
     SineFactory vfactory;
-    int polyphony = 4;
+    int polyphony = 11;
     _impl->instrument = Instrument::create(polyphony, &vfactory);
     _impl->sequencer = Sequencer::create();
 }
