@@ -7,6 +7,7 @@
 #include "MixTool.hpp"
 #include "Effect.hpp"
 #include "MTime.hpp"
+#include <algorithm>
 
 using MixTool::mix;
 

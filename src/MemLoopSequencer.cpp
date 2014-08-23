@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <iostream>
 #include "MTime.hpp"
+#include <cstring>
 
 #define NO_NOTE {000,000}
 #define OFF_NOTE {-1, -1}
