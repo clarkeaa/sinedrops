@@ -1,6 +1,7 @@
 
 #include "SineVoiceInfo.hpp"
 #include <cmath>
+#include "Envelope.hpp"
 
 static double chromatic(int key)
 {
@@ -8,8 +9,24 @@ static double chromatic(int key)
 }
 
 SineVoiceInfo::SineVoiceInfo()
-    : scale(chromatic)
+    : scale(chromatic),
+      _envelope(NULL)
 {
     
+}
+
+SineVoiceInfo::~SineVoiceInfo()
+{
+    safeRelease(_envelope);
+}
+
+void SineVoiceInfo::setEnvelope(Envelope* envelope)
+{
+    set(&_envelope, envelope);    
+}
+    
+Envelope* SineVoiceInfo::envelope()
+{
+    return _envelope;
 }
 

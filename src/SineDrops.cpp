@@ -7,6 +7,7 @@
 #include "SineVoice.hpp"
 #include "Delay.hpp"
 #include "SineVoiceInfo.hpp"
+#include "AREnvelope.hpp"
 
 struct SineDrops::SineDropsImpl {
     int channelCount;
@@ -33,6 +34,10 @@ namespace {
             : _sineInfo(new SineVoiceInfo())
         {
             _sineInfo->retain();
+            AREnvelope* env = new AREnvelope();
+            env->setAttack(0.01)
+                .setRelease(0.1);
+            _sineInfo->setEnvelope(env);
         }
         
         ~SineFactory() {

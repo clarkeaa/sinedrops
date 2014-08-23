@@ -24,3 +24,4 @@ void Object::release()
         delete this;
     }
 }
+

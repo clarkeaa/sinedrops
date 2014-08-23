@@ -4,7 +4,7 @@
 #include <cstring>
 #include <cmath>
 #include <stdint.h>
-#include "AREnvelope.hpp"
+#include "Envelope.hpp"
 #include <functional>
 #include "RenderOptions.hpp"
 #include "SineVoiceInfo.hpp"
@@ -23,7 +23,6 @@ namespace {
 struct SineVoice::SineVoiceImpl {
     int key;
     int velocity;
-    Envelope* envelope;
     GateInfo gateOnTime;
     GateInfo gateOffTime;
     SineVoiceInfo* info;
@@ -31,18 +30,12 @@ struct SineVoice::SineVoiceImpl {
     SineVoiceImpl(SineVoiceInfo* argInfo) 
         : key(-1),
           velocity(0),
-          envelope(NULL),
           info(argInfo)
         {
-            AREnvelope* env = new AREnvelope();
-            env->setAttack(0.01)
-                .setRelease(0.1);
-            envelope=env;
             info->retain();
         }
 
     ~SineVoiceImpl() {
-        delete this->envelope;
         info->release();
     }
 };
@@ -110,7 +103,7 @@ int SineVoice::fillBuffer(float* buffer,
     MTime envTime = currentTime;
     for(int i=0; i<frameCount; ++i) {
         envTime.value = currentTime.value + i;
-        double envAmp = calcAmpEnv(_impl->envelope,
+        double envAmp = calcAmpEnv(_impl->info->envelope(),
                                    _impl->gateOnTime,
                                    _impl->gateOffTime,
                                    envTime);

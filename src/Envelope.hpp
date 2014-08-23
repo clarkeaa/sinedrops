@@ -2,7 +2,9 @@
 
 class MTime;
 
-class Envelope
+#include "Object.hpp"
+
+class Envelope : public Object
 {
 public:
     virtual ~Envelope() {}
