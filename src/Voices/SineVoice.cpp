@@ -8,6 +8,7 @@
 #include <functional>
 #include "RenderOptions.hpp"
 #include "SineVoiceInfo.hpp"
+#include <cassert>
 
 namespace {
     struct GateInfo {
@@ -115,8 +116,15 @@ int SineVoice::fillBuffer(float* buffer,
                                    envTime);
         uint64_t count = i + countStart;
         float val = amp * envAmp * sin(sinCo * count);
-        for(int chan=0; chan<kNumChannels; ++chan) {
+
+        switch(kNumChannels) {
+        case 2:
             *buffer++ = val;
+        case 1:
+            *buffer++ = val;
+            break;
+        default:
+            assert(false);
         }
     }
 
