@@ -81,13 +81,13 @@ static double s_bpm = 120.0;
 
 struct MemLoopSequencer::MemLoopSequencerImpl {
     uint64_t count;
-    Voice* activeVoices[s_seqWidth];
-    
+    uint32_t noteCount;
+    uint32_t activeNotes[s_seqWidth];
 
     MemLoopSequencerImpl()
-        : count(0)
+        : count(0), noteCount(1)
         {
-            memset(activeVoices, 0, sizeof(activeVoices));
+            memset(activeNotes, 0, sizeof(activeNotes));
         }
 };
 
@@ -122,14 +122,16 @@ void MemLoopSequencer::update(const std::string& name,
             int note[2] = {s_seq[loc][i][0], s_seq[loc][i][1]};
             printf("%03d %02d | ", note[0], note[1]);
             if (note[0] > 0) {
-                Voice* voice = instrument->nextVoice();
+                Voice* voice = instrument->nextVoice(_impl->noteCount);
+                _impl->activeNotes[i] = _impl->noteCount;
+                _impl->noteCount += 1;
                 voice->gateOn(currentTime, note[1], note[0]);
-                _impl->activeVoices[i] = voice;
             } else if (note[0] < 0) {
-                Voice* voice = _impl->activeVoices[i];
+                uint32_t note = _impl->activeNotes[i];
+                Voice* voice = instrument->getVoice(note);
                 if (voice) {
                     voice->gateOff(currentTime);
-                    _impl->activeVoices[i] = NULL;
+                    _impl->activeNotes[i] = 0;
                 }
             }
         }

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stdint.h>
+
 class Voice;
 class VoiceFactory;
 class MTime;
@@ -13,7 +15,9 @@ public:
 
     virtual ~Instrument();
 
-    Voice* nextVoice();
+    Voice* getVoice(uint32_t ident);
+
+    Voice* nextVoice(uint32_t ident);
 
     int fillBuffer(float* buffer, 
                    unsigned long frameCount, 

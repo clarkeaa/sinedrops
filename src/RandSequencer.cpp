@@ -9,10 +9,12 @@
 struct RandSequencer::RandSequencerImpl {
     uint64_t count;
     Voice* lastGateOnVoice;
+    int voiceCount;
 
     RandSequencerImpl()
         : count(0), 
-          lastGateOnVoice(NULL)
+          lastGateOnVoice(NULL),
+          voiceCount(0)
         {}
 };
 
@@ -39,7 +41,7 @@ void RandSequencer::update(const std::string& name,
     if (div > _impl->count) {
         _impl->count = div;
 
-        Voice* voice = instrument->nextVoice();
+        Voice* voice = instrument->getVoice(_impl->voiceCount++);
 
         if (voice == _impl->lastGateOnVoice) {
             voice->gateOff(currentTime);

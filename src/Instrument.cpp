@@ -9,10 +9,12 @@ static const int s_numChannels = 2;
 
 struct Instrument::InstrumentImpl {
     std::vector<Voice*> voices;
+    std::vector<uint32_t> voiceIdents;
     int currentIndex;
 
     InstrumentImpl(int polyphony)
         : voices(polyphony),
+          voiceIdents(polyphony, 0),
           currentIndex(0)
         {}
 };
@@ -38,11 +40,29 @@ Instrument::~Instrument()
     delete _impl;
 }
 
-Voice* Instrument::nextVoice()
+Voice* Instrument::getVoice(uint32_t ident)
 {
-    Voice* answer = _impl->voices[_impl->currentIndex];
-    _impl->currentIndex = 
-        (_impl->currentIndex + 1) % _impl->voices.size();
+    auto loc = std::find(_impl->voiceIdents.begin(),
+                         _impl->voiceIdents.end(),
+                         ident);
+
+    Voice* answer = NULL;
+    if (loc != _impl->voiceIdents.end()) {
+        uint32_t index = loc - _impl->voiceIdents.begin();
+        answer = _impl->voices[index];
+    } 
+    return answer;
+}
+
+Voice* Instrument::nextVoice(uint32_t ident)
+{
+    Voice* answer = getVoice(ident);
+    if (!answer) {
+        answer = _impl->voices[_impl->currentIndex];
+        _impl->voiceIdents[_impl->currentIndex] = ident;
+        _impl->currentIndex = 
+            (_impl->currentIndex + 1) % _impl->voices.size();
+    }
     return answer;
 }
 
