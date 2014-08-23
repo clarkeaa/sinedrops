@@ -6,9 +6,11 @@ find_library(PORTAUDIO portaudio)
 
 add_executable(sinedrops 
     src/AREnvelope.cpp
+    src/Delay.cpp
     src/Instrument.cpp
     src/MTime.cpp
     src/MemLoopSequencer.cpp
+    src/MixTool.cpp
     src/RandSequencer.cpp
     src/Sequencer.cpp
     src/SineDrops.cpp

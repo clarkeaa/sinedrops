@@ -30,8 +30,8 @@ struct SineVoice::SineVoiceImpl {
           velocity(0),
           envelope(new AREnvelope())
         {
-            envelope->setAttack(0.1)
-                .setRelease(0.5);
+            envelope->setAttack(0.01)
+                .setRelease(0.1);
         }
 
     ~SineVoiceImpl() {

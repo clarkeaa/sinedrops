@@ -4,7 +4,7 @@
 
 Sequencer* Sequencer::create()
 {
-    //return RandSequencer::create();
-    return MemLoopSequencer::create();
+    return RandSequencer::create();
+    //return MemLoopSequencer::create();
 }
 

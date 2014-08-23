@@ -35,7 +35,7 @@ void RandSequencer::update(const std::string& name,
                            Instrument* instrument,
                            const MTime& currentTime)
 {
-    uint64_t div = currentTime.seconds() / 0.5;
+    uint64_t div = currentTime.seconds() / 0.125;
     if (div > _impl->count) {
         _impl->count = div;
 
@@ -45,8 +45,10 @@ void RandSequencer::update(const std::string& name,
             lastVoice->gateOff(currentTime);
         }
 
-        Voice* nextVoice = instrument->nextVoice(_impl->voiceCount);
-        int key = ((rand() % 20) + 10) * 3;
-        nextVoice->gateOn(currentTime, key, 60);
+        if (div % 16 == 0) {
+            Voice* nextVoice = instrument->nextVoice(_impl->voiceCount);
+            int key = ((rand() % 20) + 10) * 3;
+            nextVoice->gateOn(currentTime, key, 60);
+        }
     }
 }

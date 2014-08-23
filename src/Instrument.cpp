@@ -4,6 +4,11 @@
 #include <vector>
 #include "Voice.hpp"
 #include "VoiceFactory.hpp"
+#include "MixTool.hpp"
+#include "Delay.hpp"
+#include "MTime.hpp"
+
+using MixTool::mix;
 
 static const int s_numChannels = 2;
 
@@ -11,12 +16,18 @@ struct Instrument::InstrumentImpl {
     std::vector<Voice*> voices;
     std::vector<uint32_t> voiceIdents;
     int currentIndex;
+    Delay* delay;
 
     InstrumentImpl(int polyphony)
         : voices(polyphony),
           voiceIdents(polyphony, 0),
-          currentIndex(0)
+          currentIndex(0),
+          delay(new Delay({.value=1,.timescale=1}, 0.5, 0.5))
         {}
+
+    ~InstrumentImpl() {
+        delete delay;
+    }
 };
 
 Instrument* Instrument::create(int polyphony, VoiceFactory* vfactory)
@@ -66,23 +77,6 @@ Voice* Instrument::nextVoice(uint32_t ident)
     return answer;
 }
 
-static void mix(float* dst, float* src, unsigned long frameCount)
-{
-    unsigned long count = frameCount * s_numChannels;
-    unsigned long n = (count + 7) / 8;
-    switch(count % 8) {
-    case 0:do {*dst++ += *src++;
-        case 7:*dst++ += *src++;
-        case 6:*dst++ += *src++;
-        case 5:*dst++ += *src++;
-        case 4:*dst++ += *src++;
-        case 3:*dst++ += *src++;
-        case 2:*dst++ += *src++;
-        case 1:*dst++ += *src++;
-        } while(--n > 0);
-    }
-}
-
 int Instrument::fillBuffer(float* buffer, 
                            unsigned long frameCount, 
                            const MTime& currentTime)
@@ -91,8 +85,10 @@ int Instrument::fillBuffer(float* buffer,
     float tempBuffer[frameCount*s_numChannels];
     for( auto voice : _impl->voices) {
         voice->fillBuffer(tempBuffer, frameCount, currentTime);
-        mix(buffer, tempBuffer, frameCount);
+        mix(buffer, tempBuffer, frameCount*s_numChannels);
     }
     
+    _impl->delay->fillBuffer(buffer, frameCount, currentTime);
+
     return 0;
 }
