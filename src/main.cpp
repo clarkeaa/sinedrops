@@ -7,14 +7,13 @@
 #include "SineDrops.hpp"
 #include "MTime.hpp"
 #include <memory>
+#include "RenderOptions.hpp"
 
 typedef float  float32_t;
 typedef double float64_t;
 
-static const int s_channelCount = 2;
 static const PaSampleFormat s_sampleFormat = paFloat32;
 static const size_t s_sampleSize = sizeof(float32_t);
-static const double s_sampleRate = 44100;
 
 namespace {
     struct CallbackState {
@@ -35,7 +34,7 @@ static int callback(const void *input,
         static_cast<CallbackState*>(userData);
     MTime time = {
         .value = callbackState->time,
-        .timescale = static_cast<uint32_t>(s_sampleRate)
+        .timescale = static_cast<uint32_t>(kSampleRate)
     };
     SineDrops* sineDrops = callbackState->sineDrops;
     int answer = sineDrops->fillBuffer(buffer, 
@@ -54,7 +53,7 @@ int main(int argc, const char* argv[])
     PaDeviceIndex outputDevice = Pa_GetDefaultOutputDevice();
     PaStreamParameters outputParameters = {
         .device = outputDevice,
-        .channelCount = s_channelCount,
+        .channelCount = kNumChannels,
         .sampleFormat = s_sampleFormat,
         .suggestedLatency = 0.1,
         .hostApiSpecificStreamInfo = NULL,
@@ -63,7 +62,7 @@ int main(int argc, const char* argv[])
     PaStreamFlags streamFlags = 0;   
     
     std::shared_ptr<SineDrops> 
-        sineDrops(SineDrops::create(s_channelCount, s_sampleRate));
+        sineDrops(SineDrops::create(kNumChannels, kSampleRate));
 
     CallbackState callbackState = {
         .time = 0,
@@ -74,7 +73,7 @@ int main(int argc, const char* argv[])
         Pa_OpenStream( &stream,
                        NULL,
                        &outputParameters,
-                       s_sampleRate,
+                       kSampleRate,
                        framesPerBuffer,
                        streamFlags,
                        callback,

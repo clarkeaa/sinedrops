@@ -4,9 +4,8 @@
 #include <cmath>
 #include <stdint.h>
 #include "AREnvelope.hpp"
-
-static const int s_numChannels = 2;
-static const double s_sampleRate = 44100.0;
+#include <functional>
+#include "RenderOptions.hpp"
 
 namespace {
     struct GateInfo {
@@ -18,17 +17,24 @@ namespace {
     };
 }
 
+static double chromatic(int key)
+{
+    return pow(2.0, (key + 48) / 12.0);
+}
+
 struct SineVoice::SineVoiceImpl {
     int key;
     int velocity;
     AREnvelope* envelope;
     GateInfo gateOnTime;
     GateInfo gateOffTime;
+    std::function<double(int)> scale;
 
     SineVoiceImpl() 
         : key(-1),
           velocity(0),
-          envelope(new AREnvelope())
+          envelope(new AREnvelope()),
+          scale(chromatic)
         {
             envelope->setAttack(0.01)
                 .setRelease(0.1);
@@ -72,11 +78,6 @@ inline static double calcAmp(int velocity)
     return velocity / 127.0f;
 }
 
-inline static double calcFreq(int key)
-{
-    return pow(2.0, (key + 48) / 12.0);
-}
-
 static double calcAmpEnv(const AREnvelope* env,
                          const GateInfo& gateOnTime,
                          const GateInfo& gateOffTime,
@@ -100,10 +101,10 @@ int SineVoice::fillBuffer(float* buffer,
                           unsigned long frameCount, 
                           const MTime& currentTime)
 {
-    double freq = calcFreq(_impl->key);
+    double freq = _impl->scale(_impl->key);
     double amp = calcAmp(_impl->velocity);
     uint64_t countStart = currentTime.value;
-    double sinCo = freq * 2.0 * M_PI / s_sampleRate;
+    double sinCo = freq * 2.0 * M_PI / kSampleRate;
     MTime envTime = currentTime;
     for(int i=0; i<frameCount; ++i) {
         envTime.value = currentTime.value + i;
@@ -113,7 +114,7 @@ int SineVoice::fillBuffer(float* buffer,
                                    envTime);
         uint64_t count = i + countStart;
         float val = amp * envAmp * sin(sinCo * count);
-        for(int chan=0; chan<s_numChannels; ++chan) {
+        for(int chan=0; chan<kNumChannels; ++chan) {
             *buffer++ = val;
         }
     }

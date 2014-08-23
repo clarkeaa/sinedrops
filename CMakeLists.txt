@@ -12,6 +12,7 @@ add_executable(sinedrops
     src/MemLoopSequencer.cpp
     src/MixTool.cpp
     src/RandSequencer.cpp
+    src/RenderOptions.cpp
     src/Sequencer.cpp
     src/SineDrops.cpp
     src/SineVoice.cpp

@@ -1,17 +1,17 @@
 #include "Instrument.hpp"
+
+#include "Effect.hpp"
+#include "MTime.hpp"
+#include "MixTool.hpp"
+#include "RenderOptions.hpp"
+#include "Voice.hpp"
+#include "VoiceFactory.hpp"
+#include <algorithm>
 #include <cstdlib>
 #include <cstring>
 #include <vector>
-#include "Voice.hpp"
-#include "VoiceFactory.hpp"
-#include "MixTool.hpp"
-#include "Effect.hpp"
-#include "MTime.hpp"
-#include <algorithm>
 
 using MixTool::mix;
-
-static const int s_numChannels = 2;
 
 struct Instrument::InstrumentImpl {
     std::vector<Voice*> voices;
@@ -84,11 +84,11 @@ int Instrument::fillBuffer(float* buffer,
                            unsigned long frameCount, 
                            const MTime& currentTime)
 {
-    memset(buffer, 0, frameCount*s_numChannels*sizeof(float));
-    float tempBuffer[frameCount*s_numChannels];
+    memset(buffer, 0, frameCount*kNumChannels*sizeof(float));
+    float tempBuffer[frameCount*kNumChannels];
     for( auto voice : _impl->voices) {
         voice->fillBuffer(tempBuffer, frameCount, currentTime);
-        mix(buffer, tempBuffer, frameCount*s_numChannels);
+        mix(buffer, tempBuffer, frameCount*kNumChannels);
     }
     
     if (_impl->effect) {

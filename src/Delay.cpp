@@ -5,8 +5,7 @@
 #include "RingBuffer.hpp"
 #include <cstdlib>
 #include "MixTool.hpp"
-
-static const int s_numChannels = 2;
+#include "RenderOptions.hpp"
 
 struct Delay::DelayImpl {
     MTime duration;
@@ -47,7 +46,7 @@ int Delay::fillBuffer(float* buffer,
                       unsigned long frameCount, 
                       const MTime& currentTime)
 {
-    uint32_t bufferLen = frameCount * s_numChannels;
+    uint32_t bufferLen = frameCount * kNumChannels;
     uint32_t chunkSize = 
         (bufferLen > _impl->buffer->size())?
         _impl->buffer->size():
