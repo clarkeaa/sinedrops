@@ -16,12 +16,14 @@ add_executable(sinedrops
     src/Instrument.cpp
     src/MTime.cpp
     src/MixTool.cpp
+    src/Object.cpp
     src/RenderOptions.cpp
     src/Sequencer.cpp
     src/Sequencers/MemLoopSequencer.cpp
     src/Sequencers/RandSequencer.cpp
     src/SineDrops.cpp
     src/Voices/SineVoice.cpp
+    src/Voices/SineVoiceInfo.cpp
     src/main.cpp 
     ) 
 target_link_libraries(sinedrops ${PORTAUDIO})

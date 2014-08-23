@@ -1,10 +1,12 @@
 #include "SineDrops.hpp"
+
 #include <string.h>
 #include "Sequencer.hpp"
 #include "Instrument.hpp"
 #include "VoiceFactory.hpp"
 #include "SineVoice.hpp"
 #include "Delay.hpp"
+#include "SineVoiceInfo.hpp"
 
 struct SineDrops::SineDropsImpl {
     int channelCount;
@@ -26,9 +28,22 @@ SineDrops* SineDrops::create(int channelCount,
 
 namespace {
     class SineFactory : public VoiceFactory {
-        Voice* makeVoice() {
-            return SineVoice::create();
+    public:
+        SineFactory() 
+            : _sineInfo(new SineVoiceInfo())
+        {
+            _sineInfo->retain();
         }
+        
+        ~SineFactory() {
+            _sineInfo->release();
+        }
+        
+        Voice* makeVoice() {
+            return SineVoice::create(_sineInfo);
+        }
+    private:
+        SineVoiceInfo* _sineInfo;
     };
 }
 

@@ -3,12 +3,14 @@
 #include "Voice.hpp"
 #include "MTime.hpp"
 
+class SineVoiceInfo;
+
 class SineVoice : public Voice
 {
 public:
     struct SineVoiceImpl;
 
-    static SineVoice* create();
+    static SineVoice* create(SineVoiceInfo* info);
 
     virtual ~SineVoice();
 
@@ -22,6 +24,6 @@ public:
                            unsigned long frameCount, 
                            const MTime& currentTime) override;
 private:
-    SineVoice();
+    SineVoice(SineVoiceInfo* info);
     struct SineVoiceImpl* _impl;
 };
