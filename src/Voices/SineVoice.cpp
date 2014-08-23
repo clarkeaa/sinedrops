@@ -1,4 +1,5 @@
 #include "SineVoice.hpp"
+
 #include <cstdio>
 #include <cstring>
 #include <cmath>

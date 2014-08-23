@@ -4,8 +4,9 @@ project(sinedrops)
 find_library(PORTAUDIO portaudio)
 
 include_directories(./src)
-include_directories(./src/Sequencers)
 include_directories(./src/Effects)
+include_directories(./src/Sequencers)
+include_directories(./src/Voices)
 include_directories(/opt/local/include)
 
 add_executable(sinedrops 
@@ -19,7 +20,7 @@ add_executable(sinedrops
     src/Sequencers/MemLoopSequencer.cpp
     src/Sequencers/RandSequencer.cpp
     src/SineDrops.cpp
-    src/SineVoice.cpp
+    src/Voices/SineVoice.cpp
     src/main.cpp 
     ) 
 target_link_libraries(sinedrops ${PORTAUDIO})

@@ -14,13 +14,13 @@ public:
 
     virtual void gateOn(const MTime& time, 
                         int key, 
-                        int velocity);
+                        int velocity) override;
 
-    virtual void gateOff(const MTime& time);
+    virtual void gateOff(const MTime& time) override;
     
     virtual int fillBuffer(float* buffer, 
                            unsigned long frameCount, 
-                           const MTime& currentTime);
+                           const MTime& currentTime) override;
 private:
     SineVoice();
     struct SineVoiceImpl* _impl;
