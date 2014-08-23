@@ -4,6 +4,7 @@
 #include "Instrument.hpp"
 #include "VoiceFactory.hpp"
 #include "SineVoice.hpp"
+#include "Delay.hpp"
 
 struct SineDrops::SineDropsImpl {
     int channelCount;
@@ -39,6 +40,8 @@ SineDrops::SineDrops(int channelCount,
     int polyphony = 11;
     _impl->instrument = Instrument::create(polyphony, &vfactory);
     _impl->sequencer = Sequencer::create();
+    Delay* delay = new Delay({.value=1,.timescale=1}, 0.5, 0.5);
+    _impl->instrument->setEffect(delay);
 }
 
 SineDrops::~SineDrops()

@@ -1,9 +1,9 @@
 
 #pragma once
 
-class MTime;
+#include "Effect.hpp"
 
-class Delay
+class Delay : public Effect
 {
 public:
     struct DelayImpl;
@@ -14,9 +14,9 @@ public:
 
     virtual ~Delay();
 
-    int fillBuffer(float* buffer, 
-                   unsigned long frameCount, 
-                   const MTime& currentTime);
+    virtual int fillBuffer(float* buffer, 
+                           unsigned long frameCount, 
+                           const MTime& currentTime) override;
     
 private:
     DelayImpl* _impl;

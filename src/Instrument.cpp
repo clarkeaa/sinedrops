@@ -5,7 +5,7 @@
 #include "Voice.hpp"
 #include "VoiceFactory.hpp"
 #include "MixTool.hpp"
-#include "Delay.hpp"
+#include "Effect.hpp"
 #include "MTime.hpp"
 
 using MixTool::mix;
@@ -16,17 +16,19 @@ struct Instrument::InstrumentImpl {
     std::vector<Voice*> voices;
     std::vector<uint32_t> voiceIdents;
     int currentIndex;
-    Delay* delay;
+    Effect* effect;
 
     InstrumentImpl(int polyphony)
         : voices(polyphony),
           voiceIdents(polyphony, 0),
           currentIndex(0),
-          delay(new Delay({.value=1,.timescale=1}, 0.5, 0.5))
+          effect(NULL)
         {}
 
     ~InstrumentImpl() {
-        delete delay;
+        if (effect) {
+            delete effect;
+        }
     }
 };
 
@@ -88,7 +90,19 @@ int Instrument::fillBuffer(float* buffer,
         mix(buffer, tempBuffer, frameCount*s_numChannels);
     }
     
-    _impl->delay->fillBuffer(buffer, frameCount, currentTime);
+    if (_impl->effect) {
+        _impl->effect->fillBuffer(buffer, frameCount, currentTime);
+    }
 
     return 0;
+}
+
+void Instrument::setEffect(Effect* effect)
+{
+    if (_impl->effect != effect) {
+        if (_impl->effect) {
+            delete _impl->effect;
+        }
+        _impl->effect = effect;
+    }
 }

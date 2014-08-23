@@ -5,6 +5,7 @@
 class Voice;
 class VoiceFactory;
 class MTime;
+class Effect;
 
 class Instrument
 {
@@ -22,6 +23,9 @@ public:
     int fillBuffer(float* buffer, 
                    unsigned long frameCount, 
                    const MTime& currentTime);
+    
+    void setEffect(Effect* effect);
+    
 private:
     Instrument(int polyphony, VoiceFactory* vfactory);
 
