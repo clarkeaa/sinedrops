@@ -26,7 +26,7 @@ static double chromatic(int key)
 struct SineVoice::SineVoiceImpl {
     int key;
     int velocity;
-    AREnvelope* envelope;
+    Envelope* envelope;
     GateInfo gateOnTime;
     GateInfo gateOffTime;
     std::function<double(int)> scale;
@@ -34,11 +34,13 @@ struct SineVoice::SineVoiceImpl {
     SineVoiceImpl() 
         : key(-1),
           velocity(0),
-          envelope(new AREnvelope()),
+          envelope(NULL),
           scale(chromatic)
         {
-            envelope->setAttack(0.01)
+            AREnvelope* env = new AREnvelope();
+            env->setAttack(0.01)
                 .setRelease(0.1);
+            envelope=env;
         }
 
     ~SineVoiceImpl() {
@@ -79,7 +81,7 @@ inline static double calcAmp(int velocity)
     return velocity / 127.0f;
 }
 
-static double calcAmpEnv(const AREnvelope* env,
+static double calcAmpEnv(const Envelope* env,
                          const GateInfo& gateOnTime,
                          const GateInfo& gateOffTime,
                          const MTime& currentTime)

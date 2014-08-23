@@ -5,13 +5,14 @@ find_library(PORTAUDIO portaudio)
 
 include_directories(./src)
 include_directories(./src/Effects)
+include_directories(./src/Envelopes)
 include_directories(./src/Sequencers)
 include_directories(./src/Voices)
 include_directories(/opt/local/include)
 
 add_executable(sinedrops 
-    src/AREnvelope.cpp
     src/Effects/Delay.cpp
+    src/Envelopes/AREnvelope.cpp
     src/Instrument.cpp
     src/MTime.cpp
     src/MixTool.cpp
