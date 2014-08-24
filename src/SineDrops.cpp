@@ -4,10 +4,11 @@
 #include "Sequencer.hpp"
 #include "Instrument.hpp"
 #include "VoiceFactory.hpp"
-#include "SineVoice.hpp"
+#include "Voice.hpp"
 #include "Delay.hpp"
-#include "SineVoiceInfo.hpp"
+#include "SineSynth.hpp"
 #include "AREnvelope.hpp"
+#include "MTime.hpp"
 
 struct SineDrops::SineDropsImpl {
     int channelCount;
@@ -31,7 +32,7 @@ namespace {
     class SineFactory : public VoiceFactory {
     public:
         SineFactory() 
-            : _sineInfo(new SineVoiceInfo())
+            : _sineInfo(new SineSynth())
         {
             _sineInfo->retain();
             AREnvelope* env = new AREnvelope();
@@ -45,10 +46,10 @@ namespace {
         }
         
         Voice* makeVoice() {
-            return SineVoice::create(_sineInfo);
+            return Voice::create(_sineInfo);
         }
     private:
-        SineVoiceInfo* _sineInfo;
+        SineSynth* _sineInfo;
     };
 }
 

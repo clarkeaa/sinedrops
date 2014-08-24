@@ -1,19 +1,28 @@
 #pragma once
 
 class MTime;
+class Synth;
 
 class Voice
 {
 public:
-    virtual ~Voice() {}
+    struct VoiceImpl;
 
-    virtual void gateOn(const MTime& time, 
-                        int key, 
-                        int velocity) = 0;
+    static Voice* create(Synth* info);
 
-    virtual void gateOff(const MTime& time) = 0;
+    virtual ~Voice();
+
+    void gateOn(const MTime& time, 
+                int key, 
+                int velocity);
     
-    virtual int fillBuffer(float* buffer, 
-                           unsigned long frameCount, 
-                           const MTime& currentTime) = 0;
+    void gateOff(const MTime& time);
+    
+    int fillBuffer(float* buffer, 
+                   unsigned long frameCount, 
+                   const MTime& currentTime);
+
+private:
+    Voice(Synth* synth);
+    struct VoiceImpl* _impl;
 };
