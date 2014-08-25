@@ -52,17 +52,15 @@ int SineSynth::fillBuffer(const RenderInfo& rinfo,
                           const GateInfo& gateOffInfo)
 {
     float* buffer = rinfo.buffer;
-    uint64_t countStart = rinfo.currentTime.value;
     double sinCo = freq * 2.0 * M_PI / kSampleRate;
-    MTime envTime = rinfo.currentTime;
+    MTime loopTime = rinfo.currentTime;
     for(int i=0; i<rinfo.frameCount; ++i) {
-        envTime.value = rinfo.currentTime.value + i;
+        loopTime.value = rinfo.currentTime.value + i;
         double envAmp = Envelope::calc(_envelope,
                                        gateOnInfo,
                                        gateOffInfo,
-                                       envTime);
-        uint64_t count = i + countStart;
-        float val = amp * envAmp * sin(sinCo * count);
+                                       loopTime);
+        float val = amp * envAmp * sin(sinCo * loopTime.value);
 
         switch(kNumChannels) {
         case 2:
