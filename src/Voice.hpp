@@ -2,6 +2,7 @@
 
 class MTime;
 class Synth;
+struct RenderInfo;
 
 class Voice
 {
@@ -18,9 +19,7 @@ public:
     
     void gateOff(const MTime& time);
     
-    int fillBuffer(float* buffer, 
-                   unsigned long frameCount, 
-                   const MTime& currentTime);
+    int fillBuffer(const RenderInfo& rinfo);
 
 private:
     Voice(Synth* synth);

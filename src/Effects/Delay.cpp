@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include "MixTool.hpp"
 #include "RenderOptions.hpp"
+#include "RenderInfo.hpp"
 
 struct Delay::DelayImpl {
     MTime duration;
@@ -42,11 +43,10 @@ Delay::~Delay()
     delete _impl;
 }
 
-int Delay::fillBuffer(float* buffer, 
-                      unsigned long frameCount, 
-                      const MTime& currentTime)
+int Delay::fillBuffer(const RenderInfo& rinfo)
 {
-    uint32_t bufferLen = frameCount * kNumChannels;
+    float* buffer = rinfo.buffer;
+    uint32_t bufferLen = rinfo.frameCount * kNumChannels;
     uint32_t chunkSize = 
         (bufferLen > _impl->buffer->size())?
         _impl->buffer->size():

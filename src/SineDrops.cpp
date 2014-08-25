@@ -9,6 +9,7 @@
 #include "SineSynth.hpp"
 #include "AREnvelope.hpp"
 #include "MTime.hpp"
+#include "RenderInfo.hpp"
 
 struct SineDrops::SineDropsImpl {
     int channelCount;
@@ -72,11 +73,11 @@ SineDrops::~SineDrops()
     delete _impl;
 }
 
-int SineDrops::fillBuffer(float* buffer, 
-                          unsigned long frameCount, 
-                          const MTime& currentTime)
+int SineDrops::fillBuffer(const RenderInfo& rinfo)
 {
-    _impl->sequencer->update("sine", _impl->instrument, currentTime);    
-    _impl->instrument->fillBuffer(buffer, frameCount, currentTime);
+    _impl->sequencer->update("sine", 
+                             _impl->instrument, 
+                             rinfo.currentTime);
+    _impl->instrument->fillBuffer(rinfo);
     return 0;
 }

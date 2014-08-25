@@ -8,8 +8,6 @@ class Envelope;
 class SineSynth : public Synth
 {
 public:
-    typedef std::function<double(int)> ScaleFunc;
-
     SineSynth();
     
     virtual ~SineSynth();
@@ -22,9 +20,7 @@ public:
 
     virtual const ScaleFunc& scale() const override;
 
-    virtual int fillBuffer(float* buffer,
-                           unsigned long frameCount, 
-                           const MTime& currentTime,
+    virtual int fillBuffer(const RenderInfo& rinfo,
                            double freq,
                            double amp,
                            const GateInfo& gateOnInfo,

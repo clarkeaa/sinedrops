@@ -2,13 +2,12 @@
 #pragma once
 
 class MTime;
+struct RenderInfo;
 
 class Effect
 {
 public:
     virtual ~Effect() {}
 
-    virtual int fillBuffer(float* buffer, 
-                           unsigned long frameCount, 
-                           const MTime& currentTime) =0;
+    virtual int fillBuffer(const RenderInfo& rinfo) =0;
 };

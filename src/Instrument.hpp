@@ -6,6 +6,7 @@ class Voice;
 class VoiceFactory;
 class MTime;
 class Effect;
+struct RenderInfo;
 
 class Instrument
 {
@@ -20,9 +21,7 @@ public:
 
     Voice* nextVoice(uint32_t ident);
 
-    int fillBuffer(float* buffer, 
-                   unsigned long frameCount, 
-                   const MTime& currentTime);
+    int fillBuffer(const RenderInfo& renderInfo);
     
     void setEffect(Effect* effect);
     

@@ -5,6 +5,7 @@
 
 class MTime;
 class GateInfo;
+struct RenderInfo;
 
 class Synth : public Object
 {
@@ -15,9 +16,7 @@ public:
 
     virtual const ScaleFunc& scale() const =0;
     
-    virtual int fillBuffer(float* buffer,
-                           unsigned long frameCount, 
-                           const MTime& currentTime,
+    virtual int fillBuffer(const RenderInfo& rinfo,
                            double freq,
                            double amp,
                            const GateInfo& gateOnInfo,

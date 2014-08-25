@@ -8,6 +8,7 @@
 #include "MTime.hpp"
 #include <memory>
 #include "RenderOptions.hpp"
+#include "RenderInfo.hpp"
 
 typedef float  float32_t;
 typedef double float64_t;
@@ -37,9 +38,12 @@ static int callback(const void *input,
         .timescale = static_cast<uint32_t>(kSampleRate)
     };
     SineDrops* sineDrops = callbackState->sineDrops;
-    int answer = sineDrops->fillBuffer(buffer, 
-                                       frameCount, 
-                                       time);
+    RenderInfo rinfo = {
+        .buffer = buffer,
+        .frameCount = frameCount,
+        .currentTime = time,
+    };
+    int answer = sineDrops->fillBuffer(rinfo);
 
     callbackState->time += frameCount;
 

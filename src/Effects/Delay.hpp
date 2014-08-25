@@ -14,9 +14,7 @@ public:
 
     virtual ~Delay();
 
-    virtual int fillBuffer(float* buffer, 
-                           unsigned long frameCount, 
-                           const MTime& currentTime) override;
+    virtual int fillBuffer(const RenderInfo& rinfo) override;
     
 private:
     DelayImpl* _impl;

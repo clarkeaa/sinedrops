@@ -10,6 +10,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <vector>
+#include "RenderInfo.hpp"
 
 using MixTool::mix;
 
@@ -80,19 +81,24 @@ Voice* Instrument::nextVoice(uint32_t ident)
     return answer;
 }
 
-int Instrument::fillBuffer(float* buffer, 
-                           unsigned long frameCount, 
-                           const MTime& currentTime)
+int Instrument::fillBuffer(const RenderInfo& rinfo)
 {
-    memset(buffer, 0, frameCount*kNumChannels*sizeof(float));
-    float tempBuffer[frameCount*kNumChannels];
+    memset(rinfo.buffer, 
+           0, 
+           rinfo.frameCount*kNumChannels*sizeof(float));
+    float tempBuffer[rinfo.frameCount*kNumChannels];
     for( auto voice : _impl->voices) {
-        voice->fillBuffer(tempBuffer, frameCount, currentTime);
-        mix(buffer, tempBuffer, frameCount*kNumChannels);
+        RenderInfo voiceRenderInfo = {
+            .buffer = tempBuffer,
+            .frameCount = rinfo.frameCount,
+            .currentTime = rinfo.currentTime,
+        };
+        voice->fillBuffer(voiceRenderInfo);
+        mix(rinfo.buffer, tempBuffer, rinfo.frameCount*kNumChannels);
     }
     
     if (_impl->effect) {
-        _impl->effect->fillBuffer(buffer, frameCount, currentTime);
+        _impl->effect->fillBuffer(rinfo);
     }
 
     return 0;

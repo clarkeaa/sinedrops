@@ -6,6 +6,7 @@
 #include "GateInfo.hpp"
 #include "RenderOptions.hpp"
 #include <cassert>
+#include "RenderInfo.hpp"
 
 static double chromatic(int key)
 {
@@ -39,24 +40,23 @@ void SineSynth::setScale(const ScaleFunc& scaleFunc)
     _scale = scaleFunc;
 }
 
-const SineSynth::ScaleFunc& SineSynth::scale() const
+const Synth::ScaleFunc& SineSynth::scale() const
 {
     return _scale;
 }
 
-int SineSynth::fillBuffer(float* buffer,
-                          unsigned long frameCount, 
-                          const MTime& currentTime,
+int SineSynth::fillBuffer(const RenderInfo& rinfo,
                           double freq,
                           double amp,
                           const GateInfo& gateOnInfo,
                           const GateInfo& gateOffInfo)
 {
-    uint64_t countStart = currentTime.value;
+    float* buffer = rinfo.buffer;
+    uint64_t countStart = rinfo.currentTime.value;
     double sinCo = freq * 2.0 * M_PI / kSampleRate;
-    MTime envTime = currentTime;
-    for(int i=0; i<frameCount; ++i) {
-        envTime.value = currentTime.value + i;
+    MTime envTime = rinfo.currentTime;
+    for(int i=0; i<rinfo.frameCount; ++i) {
+        envTime.value = rinfo.currentTime.value + i;
         double envAmp = Envelope::calc(_envelope,
                                        gateOnInfo,
                                        gateOffInfo,

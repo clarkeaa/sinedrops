@@ -10,6 +10,7 @@
 #include "Synth.hpp"
 #include <cassert>
 #include "GateInfo.hpp"
+#include "RenderInfo.hpp"
 
 struct Voice::VoiceImpl {
     int key;
@@ -64,16 +65,12 @@ inline static double calcAmp(int velocity)
     return velocity / 127.0f;
 }
 
-int Voice::fillBuffer(float* buffer,
-                      unsigned long frameCount, 
-                      const MTime& currentTime)
+int Voice::fillBuffer(const RenderInfo& rinfo)
 {
     double freq = _impl->synth->scale()(_impl->key);
     double amp = calcAmp(_impl->velocity);
 
-    return _impl->synth->fillBuffer(buffer,
-                                    frameCount,
-                                    currentTime,
+    return _impl->synth->fillBuffer(rinfo,
                                     freq,
                                     amp,
                                     _impl->gateOnTime,

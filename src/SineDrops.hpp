@@ -1,6 +1,7 @@
 #pragma once
 
 class MTime;
+struct RenderInfo;
 
 class SineDrops
 {
@@ -12,9 +13,7 @@ public:
 
     virtual ~SineDrops();
 
-    int fillBuffer(float* buffer, 
-                   unsigned long frameCount, 
-                   const MTime& currentTime);
+    int fillBuffer(const RenderInfo& rinfo);
     
 private:
     SineDrops(int channelCount, 
