@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 2.8)
 project(sinedrops)
 
 find_library(PORTAUDIO portaudio)
+find_package(CURSES)
 
 include_directories(./src)
 include_directories(./src/Effects)
@@ -20,6 +21,7 @@ add_executable(sinedrops
     src/Object.cpp
     src/RenderOptions.cpp
     src/Sequencer.cpp
+    src/Sequencers/CursesSequencer.cpp
     src/Sequencers/MemLoopSequencer.cpp
     src/Sequencers/RandSequencer.cpp
     src/SineDrops.cpp
@@ -28,3 +30,8 @@ add_executable(sinedrops
     src/main.cpp 
     ) 
 target_link_libraries(sinedrops ${PORTAUDIO})
+
+if (${CURSES_FOUND})
+  include_directories(${CURSES_INCLUDE_DIRS})
+  target_link_libraries(sinedrops ${CURSES_LIBRARIES})
+endif (${CURSES_FOUND})

@@ -52,3 +52,11 @@ void RandSequencer::update(const std::string& name,
         }
     }
 }
+
+void RandSequencer::run() 
+{
+    std::cout << "press enter key..." << std::endl;
+    int inchar = getchar();
+    (void)inchar;
+}
+

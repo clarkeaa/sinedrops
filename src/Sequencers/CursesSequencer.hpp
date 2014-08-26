@@ -1,25 +1,22 @@
 #pragma once
 
 #include "Sequencer.hpp"
+#include <stdint.h>
 
-class RandSequencer : public Sequencer
+class CursesSequencer : public Sequencer
 {
 public:
-    struct RandSequencerImpl;
+    static CursesSequencer* create();
 
-    static RandSequencer* create();
-
-    virtual ~RandSequencer();
-
+    CursesSequencer();
     
-    virtual void run() override; 
+    virtual void run() override;
 
     virtual void update(const std::string& name, 
                         Instrument* instrument,
                         const MTime& currentTime) override;
-
 private:
-    RandSequencer();
-
-    RandSequencerImpl* _impl;
+    int _key;
+    int _nextKey;
+    uint32_t _noteCount;
 };

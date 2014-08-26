@@ -2,6 +2,7 @@
 
 class MTime;
 struct RenderInfo;
+class Sequencer;
 
 class SineDrops
 {
@@ -14,6 +15,8 @@ public:
     virtual ~SineDrops();
 
     int fillBuffer(const RenderInfo& rinfo);
+
+    Sequencer* sequencer();
     
 private:
     SineDrops(int channelCount, 

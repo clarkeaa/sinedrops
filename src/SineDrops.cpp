@@ -81,3 +81,8 @@ int SineDrops::fillBuffer(const RenderInfo& rinfo)
     _impl->instrument->fillBuffer(rinfo);
     return 0;
 }
+
+Sequencer* SineDrops::sequencer()
+{
+    return _impl->sequencer;
+}

@@ -11,6 +11,8 @@ public:
     static Sequencer* create();
 
     virtual ~Sequencer() {}
+
+    virtual void run() =0;
     
     virtual void update(const std::string& name, 
                         Instrument* instrument,

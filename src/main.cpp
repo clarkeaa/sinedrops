@@ -9,6 +9,7 @@
 #include <memory>
 #include "RenderOptions.hpp"
 #include "RenderInfo.hpp"
+#include "Sequencer.hpp"
 
 typedef float  float32_t;
 typedef double float64_t;
@@ -86,8 +87,7 @@ int main(int argc, const char* argv[])
 
     Pa_StartStream(stream);
     
-    std::cout << "press enter key..." << std::endl;
-    int inchar = getchar();
+    sineDrops->sequencer()->run();
 
     Pa_StopStream(stream);
 
