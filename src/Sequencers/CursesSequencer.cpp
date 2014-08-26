@@ -32,6 +32,7 @@ void CursesSequencer::run()
         c = getch();
         int key = 0;
         switch(c) {
+        case ' ' : key = 1; break;
         case 'q': key = middlec; break;  //c
         case '2': key = middlec+1; break;//c#
         case 'w': key = middlec+2; break;//d
@@ -90,8 +91,10 @@ void CursesSequencer::update(const std::string& name,
             lastVoice->gateOff(currentTime);
         }
 
-        Voice* nextVoice = instrument->nextVoice(_noteCount);
-        nextVoice->gateOn(currentTime, _nextKey, 60);
+        if (_nextKey > 1) {
+            Voice* nextVoice = instrument->nextVoice(_noteCount);
+            nextVoice->gateOn(currentTime, _nextKey, 60);
+        }
         _key = _nextKey;
         _nextKey = 0;
     }
