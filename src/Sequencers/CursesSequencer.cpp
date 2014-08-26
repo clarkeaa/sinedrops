@@ -27,12 +27,13 @@ void CursesSequencer::run()
     int shouldLoop = 1;
     int count = 1;
     int middlec = 52;
+    int maxy = getmaxy(stdscr);
     while(shouldLoop)
     {        
         c = getch();
         int key = 0;
         switch(c) {
-        case ' ' : key = 1; break;
+        case ' ' : key = -1; break;
         case 'q': key = middlec; break;  //c
         case '2': key = middlec+1; break;//c#
         case 'w': key = middlec+2; break;//d
@@ -65,13 +66,13 @@ void CursesSequencer::run()
         default:
             break;
         }
-        if (key>0) {
+        if (key!=0) {
             mvprintw(count, 0, "keyDown: '%d'", key);
-            count = (count + 1) % 40;
+            count = (count + 1) % maxy;
             _nextKey = key;
         } else {
             mvprintw(count, 0, "Charcter pressed is = %3d Hopefully it can be printed as '%c'", c, c); 
-            count = (count + 1) % 40;
+            count = (count + 1) % maxy;
         }
         refresh();
     }
@@ -84,14 +85,14 @@ void CursesSequencer::update(const std::string& name,
                              Instrument* instrument,
                              const MTime& currentTime)
 {
-    if (_nextKey > 0 && _nextKey != _key) {
+    if (_nextKey != 0 && _nextKey != _key) {
         Voice* lastVoice = instrument->getVoice(_noteCount++);
     
         if (lastVoice) {
             lastVoice->gateOff(currentTime);
         }
 
-        if (_nextKey > 1) {
+        if (_nextKey > 0) {
             Voice* nextVoice = instrument->nextVoice(_noteCount);
             nextVoice->gateOn(currentTime, _nextKey, 60);
         }
