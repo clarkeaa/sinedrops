@@ -7,6 +7,7 @@
 #include "RenderOptions.hpp"
 #include <cassert>
 #include "RenderInfo.hpp"
+#include "AREnvelope.hpp"
 
 static double chromatic(int key)
 {
@@ -15,24 +16,18 @@ static double chromatic(int key)
 
 SineSynth::SineSynth()
     : _scale(chromatic),
-      _envelope(NULL)
+      _ampEnvelope(NULL)
 {
-    
+    AREnvelope* env = new AREnvelope();
+    env->setAttack(0.01)
+        .setRelease(1.0);
+    _ampEnvelope = env;
+    _ampEnvelope->retain();
 }
 
 SineSynth::~SineSynth()
 {
-    safeRelease(_envelope);
-}
-
-void SineSynth::setEnvelope(Envelope* envelope)
-{
-    set(&_envelope, envelope);    
-}
-    
-Envelope* SineSynth::envelope()
-{
-    return _envelope;
+    safeRelease(_ampEnvelope);
 }
 
 void SineSynth::setScale(const ScaleFunc& scaleFunc)
@@ -56,7 +51,7 @@ int SineSynth::fillBuffer(const RenderInfo& rinfo,
     MTime loopTime = rinfo.currentTime;
     for(int i=0; i<rinfo.frameCount; ++i) {
         loopTime.value = rinfo.currentTime.value + i;
-        double envAmp = Envelope::calc(_envelope,
+        double envAmp = Envelope::calc(_ampEnvelope,
                                        gateOnInfo,
                                        gateOffInfo,
                                        loopTime);

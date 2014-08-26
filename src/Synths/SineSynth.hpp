@@ -12,10 +12,6 @@ public:
     
     virtual ~SineSynth();
     
-    void setEnvelope(Envelope* envelope);
-    
-    Envelope* envelope();
-
     void setScale(const ScaleFunc& scaleFunc);
 
     virtual const ScaleFunc& scale() const override;
@@ -27,6 +23,6 @@ public:
                            const GateInfo& gateOffInfo) override;
         
 private:
-    Envelope* _envelope;
+    Envelope* _ampEnvelope;
     ScaleFunc _scale;
 };

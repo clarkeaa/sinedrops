@@ -7,7 +7,6 @@
 #include "Voice.hpp"
 #include "Delay.hpp"
 #include "SineSynth.hpp"
-#include "AREnvelope.hpp"
 #include "MTime.hpp"
 #include "RenderInfo.hpp"
 
@@ -36,10 +35,6 @@ namespace {
             : _sineInfo(new SineSynth())
         {
             _sineInfo->retain();
-            AREnvelope* env = new AREnvelope();
-            env->setAttack(0.01)
-                .setRelease(0.1);
-            _sineInfo->setEnvelope(env);
         }
         
         ~SineFactory() {
