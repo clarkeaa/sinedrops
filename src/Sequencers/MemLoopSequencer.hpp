@@ -11,9 +11,11 @@ public:
 
     virtual ~MemLoopSequencer();
     
-    void update(const std::string& name, 
-                Instrument* instrument,
-                const MTime& currentTime);
+    virtual void run() override; 
+
+    virtual void update(const std::string& name, 
+                        Instrument* instrument,
+                        const MTime& currentTime) override;
 
 private:
     MemLoopSequencer();

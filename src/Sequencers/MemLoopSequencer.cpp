@@ -139,3 +139,10 @@ void MemLoopSequencer::update(const std::string& name,
         printf("\n");
     }
 }
+
+void MemLoopSequencer::run()
+{
+    std::cout << "press enter key..." << std::endl;
+    int inchar = getchar();
+    (void)inchar;   
+}
