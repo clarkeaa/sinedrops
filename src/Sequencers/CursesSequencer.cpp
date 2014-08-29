@@ -6,6 +6,7 @@
 
 CursesSequencer::CursesSequencer()
     : _key(0),
+      _nextKey(0),
       _noteCount(1)
 {
 
